@@ -19,7 +19,7 @@ yarn install
 yarn serve
 ```
 ### Fotos del proyecto:
-<img src="https://github.com/MssLune/recommender-movie-front/blob/main/src/assets/readme/front2.png?raw=true"> 
+<img src="https://github.com/Diego3310/recommerder-movie-front/blob/master/src/assets/readme/front2.png?raw=true"> 
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
