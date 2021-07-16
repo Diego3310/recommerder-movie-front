@@ -20,7 +20,12 @@
           prepend-icon="mdi-database-search"
           return-object
         ></v-autocomplete>
+        <v-container>
+          <v-text-field  type="number" :rules="numberRules" label="Cantidad de películas a recomendar" prepend-icon="mdi-movie-filter" v-on:change="optionChangeNumber" ></v-text-field>
+          <p class="text-right">Películas recomendadas por defecto : {{this.defaultTop}}</p>
+        </v-container>
       </v-card-text>
+   
       <v-divider></v-divider>
       <v-expand-transition>
         <v-list
@@ -66,7 +71,7 @@
   </template>
 
 <script>
-  import {ENDPOINT_PATH_MOVIES_API} from '../config/config.js'  
+  import {ENDPOINT_PATH_MOVIES_API,DEFAULT_MOVIE_TOP} from '../config/config.js'  
  
   export default {
     data: () => ({
@@ -74,10 +79,22 @@
       entries: [],
       isLoading: false,
       model: null,
-      search: null
+      search: null,
+      defaultTop: DEFAULT_MOVIE_TOP,
+      numberRules: [
+        v => parseInt(v) > 0 || 'Se debe ingresar valores mayores a 0.',
+      ]
     }),
     methods:{
-
+        optionChangeNumber: function(value){
+          if(value>0){
+            this.$emit('update:number',value);
+            this.$emit('close:movie',false)
+          }else{
+            this.$emit('close:movie',true)
+          }
+        
+        },
         optionChanged: function(value){
           this.$emit('update:movie',value);
           this.$emit('close:movie',false)
@@ -114,15 +131,12 @@
     watch: {
       search () {
 
-        // Items have already been loaded
         if (this.items.length > 0) return
 
-        // Items have already been requested
         if (this.isLoading) return
 
         this.isLoading = true
 
-        // Lazily load input items
         fetch(ENDPOINT_PATH_MOVIES_API)
           .then(res => res.json())
           .then(res => {
